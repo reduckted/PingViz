@@ -1,0 +1,94 @@
+<UserControl
+    x:Class="Views.LiveView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:oxyplot="http://oxyplot.org/wpf"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:views="clr-namespace:PingViz.Views"
+    mc:Ignorable="d" 
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    d:DataContext="{d:DesignInstance Type={x:Type views:LiveViewModel}, IsDesignTimeCreatable=False}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    >
+
+    <UserControl.Resources>
+        <views:NullToCollapsedConverter x:Key="NullToCollapsed"/>
+        <views:DoubleToTimeConverter x:Key="DoubleToTime"/>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <oxyplot:PlotView Model="{Binding Plot}">
+            <oxyplot:PlotView.TrackerDefinitions>
+                <oxyplot:TrackerDefinition/>
+            </oxyplot:PlotView.TrackerDefinitions>
+
+            <oxyplot:PlotView.DefaultTrackerTemplate>
+                <ControlTemplate>
+                    <oxyplot:TrackerControl
+                        Position="{Binding Position}"
+                        Background="{DynamicResource ControlBackgroundBrush}"
+                        BorderBrush="{DynamicResource GrayBrush7}"
+                        BorderThickness="1"
+                        BorderEdgeMode="Aliased"
+                        FontSize="{DynamicResource TooltipFontSize}"
+                        FontFamily="{DynamicResource ContentFontFamily}"
+                        Foreground="{DynamicResource BlackBrush}"
+                        Padding="6,3"
+                        SnapsToDevicePixels="True"
+                        >
+
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{Binding DataPoint.X, Converter={StaticResource DoubleToTime}}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding DataPoint.Y, StringFormat={}{0:0} ms}"/>
+                        </Grid>
+                    </oxyplot:TrackerControl>
+                </ControlTemplate>
+            </oxyplot:PlotView.DefaultTrackerTemplate>
+        </oxyplot:PlotView>
+
+        <StackPanel
+            Orientation="Vertical"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="5,0"
+            TextElement.Foreground="{DynamicResource GrayBrush2}"
+            Visibility="{Binding Current, Converter={StaticResource NullToCollapsed}}"
+            >
+
+            <TextBlock
+                Text="{Binding Current}"
+                TextAlignment="Right"
+                FontSize="22"
+                />
+
+            <TextBlock
+                Text="ms"
+                FontSize="12"
+                TextAlignment="Right"
+                Margin="0,-5,0,0"
+                />
+        </StackPanel>
+
+        <metro:ProgressRing
+            IsActive="{Binding IsLoading, Mode=OneWay}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            />
+    </Grid>
+</UserControl>
