@@ -28,15 +28,16 @@ Namespace Views
         Private ReadOnly cgCurrent As ObservableAsPropertyHelper(Of Integer?)
         Private cgSeries As AreaSeries
         Private cgLastResultTimestamp As Date?
-        Private cgIsLoading As Boolean
 
 
         Public Sub New(
+                scheduler As IScheduler,
                 resultsSource As IPingResultSource,
                 historyProvider As IHistoryProvider,
-                dateTimeProvider As IDateTimeProvider,
-                scheduler As IScheduler
+                dateTimeProvider As IDateTimeProvider
             )
+
+            MyBase.New(scheduler)
 
             If resultsSource Is Nothing Then
                 Throw New ArgumentNullException(NameOf(resultsSource))
@@ -59,7 +60,6 @@ Namespace Views
             cgDateTimeProvider = dateTimeProvider
             cgScheduler = scheduler
 
-            cgIsLoading = True
 
             ' Hold onto the x-axis because we need to update it as time moves forward.
             ' We don't need to hold on to the y-axis because it doesn't change.
@@ -484,17 +484,6 @@ Namespace Views
 
 
         Public ReadOnly Property Plot As PlotModel
-
-
-        Public Property IsLoading As Boolean
-            Get
-                Return cgIsLoading
-            End Get
-
-            Private Set
-                RaiseAndSetIfChanged(cgIsLoading, Value)
-            End Set
-        End Property
 
 
         Public ReadOnly Property Current As Integer?

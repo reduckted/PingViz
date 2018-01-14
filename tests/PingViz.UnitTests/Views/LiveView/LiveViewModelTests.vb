@@ -1269,7 +1269,7 @@ Namespace Views
                 Scheduler = New TestScheduler
                 Scheduler.AdvanceTo(dateTimeProvider.GetDateTime().Ticks)
 
-                Return New LiveViewModel(resultSource.Object, historyProvider, dateTimeProvider, Scheduler)
+                Return New LiveViewModel(Scheduler, resultSource.Object, historyProvider, dateTimeProvider)
             End Function
 
         End Class

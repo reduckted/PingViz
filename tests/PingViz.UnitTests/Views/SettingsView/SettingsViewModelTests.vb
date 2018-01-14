@@ -1,3 +1,4 @@
+Imports Microsoft.Reactive.Testing
 Imports System.ComponentModel
 
 
@@ -16,7 +17,7 @@ Namespace Views
                 manager = New Mock(Of ISettingsManager)
                 manager.SetupGet(Function(x) x.PingAddress).Returns("foo")
 
-                vm = New SettingsViewModel(manager.Object)
+                vm = New SettingsViewModel(New TestScheduler, manager.Object)
 
                 Assert.Equal(vm.PingAddress, "foo")
             End Sub
@@ -31,7 +32,7 @@ Namespace Views
                 manager = New Mock(Of ISettingsManager)
                 manager.SetupGet(Function(x) x.PingAddress).Returns("")
 
-                vm = New SettingsViewModel(manager.Object)
+                vm = New SettingsViewModel(New TestScheduler, manager.Object)
 
                 Assert.Equal(vm.PingAddress, "")
 
@@ -51,7 +52,7 @@ Namespace Views
                 manager = New Mock(Of ISettingsManager)
                 manager.SetupGet(Function(x) x.PingAddress).Returns("")
 
-                vm = New SettingsViewModel(manager.Object)
+                vm = New SettingsViewModel(New TestScheduler, manager.Object)
                 args = Nothing
 
                 AddHandler vm.PropertyChanged, Sub(s, e) args = e
@@ -76,7 +77,7 @@ Namespace Views
                 manager = New Mock(Of ISettingsManager)
                 manager.SetupGet(Function(x) x.PingAddress).Returns("foo")
 
-                vm = New SettingsViewModel(manager.Object) With {
+                vm = New SettingsViewModel(New TestScheduler, manager.Object) With {
                     .PingAddress = "bar"
                 }
 

@@ -1,4 +1,5 @@
 Imports ReactiveUI
+Imports System.Reactive.Concurrency
 
 
 Namespace Views
@@ -10,11 +11,15 @@ Namespace Views
 
         Private ReadOnly cgDisposables As List(Of IDisposable)
         Private cgOnLoadedCalled As Boolean
+        Private cgIsLoading As Integer
 
 
-        Protected Sub New()
+        Protected Sub New(scheduler As IScheduler)
             cgDisposables = New List(Of IDisposable)
-            LoadedCommand = ReactiveCommand.Create(AddressOf InternalOnLoadedAsync)
+
+            LoadedCommand = ReactiveCommand.CreateFromTask(AddressOf OnLoadedAsync, outputScheduler:=scheduler)
+
+            SetIsLoading(True)
         End Sub
 
 
@@ -23,17 +28,43 @@ Namespace Views
         End Sub
 
 
-        Private Async Function InternalOnLoadedAsync() As Task
+        Public Async Function OnLoadedAsync() As Task
             If Not cgOnLoadedCalled Then
                 cgOnLoadedCalled = True
-                Await OnLoadedAsync()
+                Await LoadAsync()
+                SetIsLoading(False)
             End If
         End Function
 
 
-        Public Overridable Function OnLoadedAsync() As Task
+        Protected Overridable Function LoadAsync() As Task
             Return Task.CompletedTask
         End Function
+
+
+        Public ReadOnly Property IsLoading As Boolean
+            Get
+                Return cgIsLoading > 0
+            End Get
+        End Property
+
+
+        Protected Sub SetIsLoading(value As Boolean)
+            If value Then
+                cgIsLoading += 1
+
+                If cgIsLoading = 1 Then
+                    RaisePropertyChanged(NameOf(IsLoading))
+                End If
+
+            Else
+                cgIsLoading -= 1
+
+                If cgIsLoading = 0 Then
+                    RaisePropertyChanged(NameOf(IsLoading))
+                End If
+            End If
+        End Sub
 
 
         Public ReadOnly Property LoadedCommand As ICommand

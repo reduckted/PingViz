@@ -1,5 +1,6 @@
 Imports MahApps.Metro.Controls
 Imports ReactiveUI
+Imports System.Reactive.Concurrency
 
 
 Namespace Views
@@ -13,7 +14,13 @@ Namespace Views
         Private cgPingAddress As String
 
 
-        Public Sub New(settingsManager As ISettingsManager)
+        Public Sub New(
+                scheduler As IScheduler,
+                settingsManager As ISettingsManager
+            )
+
+            MyBase.New(scheduler)
+
             If settingsManager Is Nothing Then
                 Throw New ArgumentNullException(NameOf(settingsManager))
             End If

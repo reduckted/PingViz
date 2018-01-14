@@ -15,9 +15,12 @@ Namespace Views
 
 
         Public Sub New(
+                scheduler As IScheduler,
                 licenseProvider As ILicenseProvider,
                 urlOpener As IUrlOpener
             )
+
+            MyBase.New(scheduler)
 
             cgUrlOpener = urlOpener
 
