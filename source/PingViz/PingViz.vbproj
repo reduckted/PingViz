@@ -263,6 +263,7 @@
     <Compile Include="Views\LiveView\LiveViewModel.vb" />
     <Compile Include="Views\Converters\NullToCollapsedConverter.vb" />
     <Compile Include="Views\MainWindow\MainWindowViewModel.vb" />
+    <Compile Include="Views\PlotViewModelBase.vb" />
     <Compile Include="Views\Regions.vb" />
     <Compile Include="Views\SettingsView\SettingsView.xaml.vb">
       <DependentUpon>SettingsView.xaml</DependentUpon>
