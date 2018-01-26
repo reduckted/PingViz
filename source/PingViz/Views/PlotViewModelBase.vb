@@ -10,8 +10,8 @@ Namespace Views
         Inherits ViewModelBase
 
 
-        Private Const TimeoutAxisKey As String = "TimeoutAxis"
-        Private Const DurationAxisKey As String = "DurationAxis"
+        Public Const TimeoutAxisKey As String = "TimeoutAxis"
+        Public Const DurationAxisKey As String = "DurationAxis"
 
 
         Private cgCurrentSeries As AreaSeries

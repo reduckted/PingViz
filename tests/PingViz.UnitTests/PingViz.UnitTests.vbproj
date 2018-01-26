@@ -104,6 +104,15 @@
     <Reference Include="Moq, Version=4.8.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.8.1\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Nito.AsyncEx.Context, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.Context.1.1.0\lib\net46\Nito.AsyncEx.Context.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Tasks, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.Tasks.1.1.0\lib\net46\Nito.AsyncEx.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.Disposables, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.Disposables.1.0.0\lib\portable45-net45+win8+wp8+wpa81\Nito.Disposables.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
     </Reference>
@@ -257,8 +266,13 @@
     </Compile>
     <Compile Include="Components\DateTimeProvider\DateTimeProviderTests.vb" />
     <Compile Include="Views\Converters\DoubleToTimeConverterTests.vb" />
+    <Compile Include="Views\HistoryView\DayBoundsAnnotationTests.vb" />
+    <Compile Include="Views\HistoryView\DurationAxisLabelAnnotationTests.vb" />
+    <Compile Include="Views\HistoryView\HistoryViewModelTests.vb" />
+    <Compile Include="Views\HistoryView\TimeAxisLabelAnnotationTests.vb" />
     <Compile Include="Views\LiveView\LiveViewModelTests.vb" />
     <Compile Include="Views\Converters\NullToCollapsedConverterTests.vb" />
+    <Compile Include="Views\ObservableHelpersTests.vb" />
     <Compile Include="Views\SettingsView\SettingsViewModelTests.vb" />
   </ItemGroup>
   <ItemGroup>

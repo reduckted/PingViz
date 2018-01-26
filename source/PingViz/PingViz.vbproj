@@ -254,6 +254,13 @@
       <DependentUpon>AboutWindowCommand.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\LicenseProvider\OpenSourceLicense.vb" />
+    <Compile Include="Views\HistoryView\DayBoundsAnnotation.vb" />
+    <Compile Include="Views\HistoryView\DurationAxisLabelAnnotation.vb" />
+    <Compile Include="Views\HistoryView\HistoryView.xaml.vb">
+      <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HistoryView\HistoryViewModel.vb" />
+    <Compile Include="Views\HistoryView\TimeAxisLabelAnnotation.vb" />
     <Compile Include="Views\IFlyoutViewModel.vb" />
     <Compile Include="Views\IWindowManager.vb" />
     <Compile Include="Views\Converters\DoubleToTimeConverter.vb" />
@@ -263,6 +270,7 @@
     <Compile Include="Views\LiveView\LiveViewModel.vb" />
     <Compile Include="Views\Converters\NullToCollapsedConverter.vb" />
     <Compile Include="Views\MainWindow\MainWindowViewModel.vb" />
+    <Compile Include="Views\ObservableHelpers.vb" />
     <Compile Include="Views\PlotViewModelBase.vb" />
     <Compile Include="Views\Regions.vb" />
     <Compile Include="Views\SettingsView\SettingsView.xaml.vb">
@@ -281,6 +289,10 @@
     <Page Include="Views\AboutView\AboutWindowCommand.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HistoryView\HistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LiveView\LiveView.xaml">
       <SubType>Designer</SubType>

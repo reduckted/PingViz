@@ -1,0 +1,224 @@
+<UserControl
+    x:Class="Views.HistoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:oxyplot="http://oxyplot.org/wpf"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:views="clr-namespace:PingViz.Views"
+    mc:Ignorable="d" 
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    d:DataContext="{d:DesignInstance Type={x:Type views:HistoryViewModel}, IsDesignTimeCreatable=False}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Calendar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <views:DoubleToTimeConverter x:Key="DoubleToTime"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <oxyplot:PlotView x:Name="Chart" Grid.Row="0" Model="{Binding Plot}">
+            <oxyplot:PlotView.TrackerDefinitions>
+                <oxyplot:TrackerDefinition/>
+            </oxyplot:PlotView.TrackerDefinitions>
+
+            <oxyplot:PlotView.DefaultTrackerTemplate>
+                <ControlTemplate>
+                    <oxyplot:TrackerControl
+                        Position="{Binding Position}"
+                        Background="{DynamicResource ControlBackgroundBrush}"
+                        BorderBrush="{DynamicResource GrayBrush7}"
+                        BorderThickness="1"
+                        BorderEdgeMode="Aliased"
+                        FontSize="{DynamicResource TooltipFontSize}"
+                        FontFamily="{DynamicResource ContentFontFamily}"
+                        Foreground="{DynamicResource BlackBrush}"
+                        Padding="6,3"
+                        SnapsToDevicePixels="True"
+                        >
+
+                        <Grid Margin="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{Binding DataPoint.X, Converter={StaticResource DoubleToTime}}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding DataPoint.Y, StringFormat={}{0:0} ms}"/>
+                        </Grid>
+                    </oxyplot:TrackerControl>
+                </ControlTemplate>
+            </oxyplot:PlotView.DefaultTrackerTemplate>
+        </oxyplot:PlotView>
+
+        <metro:ProgressRing
+            Grid.Row="0"
+            IsActive="{Binding IsLoading, Mode=OneWay}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            />
+
+        <Grid x:Name="ControlPanel" Grid.Row="1" Margin="0,1,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Background="Transparent" HorizontalAlignment="Left" Margin="5,0">
+                <Viewbox Width="22" Height="22">
+                    <Canvas Width="24" Height="24">
+                        <Path
+                            Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"
+                            Fill="{DynamicResource AccentColorBrush}"
+                            />
+                    </Canvas>
+                </Viewbox>
+
+                <Grid.ToolTip>
+                    <ToolTip>
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource GrayBrush3}"/>
+                                </Style>
+
+                                <Thickness x:Key="LabelMargin">0,0,10,0</Thickness>
+                            </Grid.Resources>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Pan" Margin="{StaticResource LabelMargin}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Left Click + Drag"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Zoom" Margin="{StaticResource LabelMargin}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Mouse wheel"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Zoom to range" Margin="{StaticResource LabelMargin}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="Shift + Left Click + Drag"/>
+                        </Grid>
+                    </ToolTip>
+                </Grid.ToolTip>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SquareButtonStyle}">
+                        <Setter Property="BorderThickness" Value="1,0,1,0"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}"/>
+                        <Setter Property="Padding" Value="35,7"/>
+                        <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+                        <Setter Property="Background" Value="{DynamicResource GrayBrush10}"/>
+                    </Style>
+                </Grid.Resources>
+
+                <Button Grid.Column="0" Command="{Binding MoveBackCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path
+                            Data="M0,5 L5,10 L5,0 Z"
+                            Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}"
+                            VerticalAlignment="Center"
+                            />
+
+                        <TextBlock
+                            Text="24 Hours"
+                            VerticalAlignment="Center"
+                            Margin="5,0,0,0"
+                            />
+                    </StackPanel>
+                </Button>
+
+                <Button
+                    Grid.Column="1"
+                    BorderThickness="0"
+                    Click="OpenJumpToDatePopup"
+                    >
+
+                    <TextBlock Text="Jump to..."/>
+                </Button>
+
+                <Button Grid.Column="2" Command="{Binding MoveForwardCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Text="24 Hours"
+                            VerticalAlignment="Center"
+                            Margin="0,0,5,0"
+                            />
+
+                        <Path
+                            Data="M5,5 L0,10 L0,0 Z"
+                            Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}"
+                            VerticalAlignment="Center"
+                            />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <Popup
+                x:Name="JumpToDatePopup"
+                StaysOpen="False"
+                >
+
+                <!--
+                The accent color is slightly transparent, so put a white 
+                background down first, then put the border inside that element.
+                -->
+                <Border Background="{DynamicResource WhiteBrush}">
+                    <Border BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1,1,1,1">
+                        <Border.Resources>
+                            <Style x:Key="NoMarginCalendarItemStyle" TargetType="{x:Type CalendarItem}" BasedOn="{StaticResource MetroCalendarItemStyle}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </Border.Resources>
+
+                        <Calendar
+                            x:Name="JumpToDateCalendar"
+                            BorderBrush="{DynamicResource AccentColorBrush}"
+                            BorderThickness="0,0,0,1"
+                            CalendarItemStyle="{StaticResource NoMarginCalendarItemStyle}"
+                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                            GotMouseCapture="OnCalendarGotMouseCapture"
+                            />
+                    </Border>
+                </Border>
+            </Popup>
+        </Grid>
+    </Grid>
+</UserControl>
