@@ -24,6 +24,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <views:DoubleToTimeConverter x:Key="DoubleToTime"/>
+            <views:DurationToStringConverter x:Key="DurationToString"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -66,7 +67,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Text="{Binding DataPoint.X, Converter={StaticResource DoubleToTime}}"/>
-                            <TextBlock Grid.Row="1" Text="{Binding DataPoint.Y, StringFormat={}{0:0} ms}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding Converter={StaticResource DurationToString}}"/>
                         </Grid>
                     </oxyplot:TrackerControl>
                 </ControlTemplate>

@@ -254,6 +254,7 @@
       <DependentUpon>AboutWindowCommand.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\LicenseProvider\OpenSourceLicense.vb" />
+    <Compile Include="Views\Converters\DurationToStringConverter.vb" />
     <Compile Include="Views\HistoryView\DayBoundsAnnotation.vb" />
     <Compile Include="Views\HistoryView\DurationAxisLabelAnnotation.vb" />
     <Compile Include="Views\HistoryView\HistoryView.xaml.vb">

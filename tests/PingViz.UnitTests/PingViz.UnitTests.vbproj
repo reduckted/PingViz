@@ -266,6 +266,7 @@
     </Compile>
     <Compile Include="Components\DateTimeProvider\DateTimeProviderTests.vb" />
     <Compile Include="Views\Converters\DoubleToTimeConverterTests.vb" />
+    <Compile Include="Views\Converters\DurationToStringConverterTests.vb" />
     <Compile Include="Views\HistoryView\DayBoundsAnnotationTests.vb" />
     <Compile Include="Views\HistoryView\DurationAxisLabelAnnotationTests.vb" />
     <Compile Include="Views\HistoryView\HistoryViewModelTests.vb" />
