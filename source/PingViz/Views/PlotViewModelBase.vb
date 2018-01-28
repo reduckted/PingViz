@@ -164,7 +164,7 @@ Namespace Views
                 ' the period that the point represents. So if there is 
                 ' a last result, extend its point by an interval.
                 If cgLastResultTimestamp.HasValue Then
-                    ExtendLastPoint(cgLastResultTimestamp.Value.Add(Application.PingInterval))
+                    ExtendLastPoint(cgLastResultTimestamp.Value.Add(stepSize))
                 End If
 
                 cgCurrentSeries = CreateSeries(key)

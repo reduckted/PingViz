@@ -176,6 +176,57 @@ Namespace Views
 
 
             <Fact()>
+            Public Async Function ExtendsLineToEndOfStepSizeWhenChangingSeriesType() As Task
+                Dim historyProvider As Mock(Of IHistoryProvider)
+                Dim pings As List(Of PingResult)
+
+
+                pings = New List(Of PingResult) From {
+                    New PingResult With {.Timestamp = #2001-04-05 00:00#, .Duration = TimeSpan.FromMilliseconds(10)},
+                    New PingResult With {.Timestamp = #2001-04-05 00:01#, .Duration = TimeSpan.FromMilliseconds(10)},
+                    New PingResult With {.Timestamp = #2001-04-05 00:02#, .Duration = Nothing},
+                    New PingResult With {.Timestamp = #2001-04-05 00:03#, .Duration = Nothing},
+                    New PingResult With {.Timestamp = #2001-04-05 00:04#, .Duration = TimeSpan.FromMilliseconds(20)},
+                    New PingResult With {.Timestamp = #2001-04-05 00:05#, .Duration = TimeSpan.FromMilliseconds(20)}
+                }
+
+                historyProvider = New Mock(Of IHistoryProvider)
+                historyProvider.Setup(Function(x) x.GetPingsAsync(It.IsAny(Of Date), It.IsAny(Of Date))).ReturnsAsync(pings)
+
+                Using vm = CreateViewModel(dateTime:=#2001-04-05 14:05:30#, historyProvider:=historyProvider.Object)
+                    Dim axis As Axis
+                    Dim series As AreaSeries
+
+
+                    Await vm.OnLoadedAsync()
+
+                    axis = vm.Plot.Axes.FirstOrDefault(Function(x) x.IsHorizontal())
+                    Assert.NotNull(axis)
+
+                    ' Zoom in to an hour.
+                    axis.Zoom(DateTimeAxis.ToDouble(#2001-04-05 00:00#), DateTimeAxis.ToDouble(#2001-04-05 01:00#))
+                    Scheduler.AdvanceBy(1)
+
+                    ' Check the span of the first series.
+                    series = TryCast(vm.Plot.Series(0), AreaSeries)
+                    Assert.NotNull(series)
+                    Assert.Equal(PlotViewModelBase.DurationAxisKey, series.YAxisKey)
+                    Assert.Equal(2, series.Points.Count)
+                    Assert.Equal(DateTimeAxis.CreateDataPoint(#2001-04-05 00:00#, 10), series.Points(0))
+                    Assert.Equal(DateTimeAxis.CreateDataPoint(#2001-04-05 00:02#, 10), series.Points(1))
+
+                    ' Check the span of the second series.
+                    series = TryCast(vm.Plot.Series(1), AreaSeries)
+                    Assert.NotNull(series)
+                    Assert.Equal(PlotViewModelBase.TimeoutAxisKey, series.YAxisKey)
+                    Assert.Equal(2, series.Points.Count)
+                    Assert.Equal(DateTimeAxis.CreateDataPoint(#2001-04-05 00:02#, 1), series.Points(0))
+                    Assert.Equal(DateTimeAxis.CreateDataPoint(#2001-04-05 00:04#, 1), series.Points(1))
+                End Using
+            End Function
+
+
+            <Fact()>
             Public Async Function HasAnnotationsForAxes() As Task
                 Dim historyProvider As Mock(Of IHistoryProvider)
 
