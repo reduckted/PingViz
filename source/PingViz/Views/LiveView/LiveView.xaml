@@ -28,7 +28,7 @@
     </i:Interaction.Triggers>
 
     <Grid>
-        <oxyplot:PlotView Model="{Binding Plot}">
+        <oxyplot:PlotView x:Name="Chart" Model="{Binding Plot}">
             <oxyplot:PlotView.TrackerDefinitions>
                 <oxyplot:TrackerDefinition/>
             </oxyplot:PlotView.TrackerDefinitions>
