@@ -13,11 +13,19 @@ Public NotInheritable Class Database
     Private Shared ReadOnly LoggerFactory As New LoggerFactory(GetLoggerProviders())
 
 
+    Private ReadOnly cgDataDirectoryProvider As IDataDirectoryProvider
+
+
     Private Shared Iterator Function GetLoggerProviders() As IEnumerable(Of ILoggerProvider)
 #If DEBUG Then
         Yield New DebugLoggerProvider(Function(category, level) String.Equals(category, DbLoggerCategory.Database.Command.Name))
 #End If
     End Function
+
+
+    Public Sub New(dataDirectoryProvider As IDataDirectoryProvider)
+        cgDataDirectoryProvider = dataDirectoryProvider
+    End Sub
 
 
     Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
@@ -29,16 +37,11 @@ Public NotInheritable Class Database
     End Sub
 
 
-    Private Shared Function GetConnectionString() As String
+    Private Function GetConnectionString() As String
         Dim dir As String
 
 
-#If DEBUG Then
-        dir = Path.Combine(FindSolutionDirectory(), "database")
-#Else
-        dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), My.Application.Info.Title)
-#End If
-
+        dir = cgDataDirectoryProvider.GetDirectory()
         Directory.CreateDirectory(dir)
 
         Return $"Data Source={Path.Combine(dir, "history.db")}"
@@ -66,29 +69,5 @@ Public NotInheritable Class Database
 
         MyBase.Dispose()
     End Sub
-
-
-#If DEBUG Then
-
-    Private Shared Function FindSolutionDirectory() As String
-        Dim dir As String
-
-
-        dir = Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location)
-
-        Do
-            If Directory.EnumerateFiles(dir, "*.sln").Any() Then
-                Return dir
-            End If
-
-            dir = Path.GetDirectoryName(dir)
-
-            If String.IsNullOrEmpty(dir) Then
-                Throw New InvalidOperationException("Could not find the solution directory.")
-            End If
-        Loop
-    End Function
-
-#End If
 
 End Class

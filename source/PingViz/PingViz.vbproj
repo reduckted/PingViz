@@ -213,6 +213,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\DataDirectoryProvider\DataDirectoryProvider.vb" />
+    <Compile Include="Components\DataDirectoryProvider\DebugDataDirectoryProvider.vb" />
+    <Compile Include="Components\DataDirectoryProvider\IDataDirectoryProvider.vb" />
     <Compile Include="Components\HistoryProvider\HistoryProvider.vb" />
     <Compile Include="Components\HistoryProvider\IHistoryProvider.vb" />
     <Compile Include="Components\LicenseProvider\ILicenseProvider.vb" />
