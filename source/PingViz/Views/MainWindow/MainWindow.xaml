@@ -51,20 +51,33 @@
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>
 
-    <TabControl
-        prism:RegionManager.RegionName="{x:Static views:Regions.Tabs}"
-        Padding="0"
-        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <TabControl.Resources>
-            <Style TargetType="{x:Type TabPanel}">
-                <Setter Property="Margin" Value="5,0,0,0"/>
-            </Style>
+        <ContentControl
+            Grid.Row="0"
+            prism:RegionManager.RegionName="{x:Static views:Regions.Error}"
+            />
 
-            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Setter Property="Header" Value="{Binding DataContext.Title}"/>
-                <Setter Property="Padding" Value="6,2,6,7"/>
-            </Style>
-        </TabControl.Resources>
-    </TabControl>
+        <TabControl
+            Grid.Row="1"
+            prism:RegionManager.RegionName="{x:Static views:Regions.Tabs}"
+            Padding="0"
+            >
+
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="Margin" Value="5,0,0,0"/>
+                </Style>
+
+                <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="Header" Value="{Binding DataContext.Title}"/>
+                    <Setter Property="Padding" Value="6,2,6,7"/>
+                </Style>
+            </TabControl.Resources>
+        </TabControl>
+    </Grid>
 </metro:MetroWindow>

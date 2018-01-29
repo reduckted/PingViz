@@ -15,12 +15,16 @@ Namespace Views
 
 
         Protected Sub New(scheduler As IScheduler)
+            Me.Scheduler = scheduler
             cgDisposables = New List(Of IDisposable)
 
             LoadedCommand = ReactiveCommand.CreateFromTask(AddressOf OnLoadedAsync, outputScheduler:=scheduler)
 
             SetIsLoading(True)
         End Sub
+
+
+        Protected ReadOnly Property Scheduler As IScheduler
 
 
         Protected Sub Use(disposable As IDisposable)

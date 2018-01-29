@@ -1,3 +1,4 @@
+Imports PingViz
 Imports Quartz
 
 
@@ -14,6 +15,7 @@ Public Class PingJob
     Private ReadOnly cgDateTimeProvider As IDateTimeProvider
     Private ReadOnly cgDatabase As IDatabase
     Private ReadOnly cgResultEmitter As IPingResultEmitter
+    Private ReadOnly cgErrorHandler As IErrorHandler
 
 
     Public Sub New(
@@ -21,7 +23,8 @@ Public Class PingJob
             settingsManager As ISettingsManager,
             dateTimeProvider As IDateTimeProvider,
             database As IDatabase,
-            resultEmitter As IPingResultEmitter
+            resultEmitter As IPingResultEmitter,
+            errorHandler As IErrorHandler
         )
 
         If pinger Is Nothing Then
@@ -44,11 +47,16 @@ Public Class PingJob
             Throw New ArgumentNullException(NameOf(resultEmitter))
         End If
 
+        If errorHandler Is Nothing Then
+            Throw New ArgumentNullException(NameOf(errorHandler))
+        End If
+
         cgPinger = pinger
         cgSettingsManager = settingsManager
         cgDateTimeProvider = dateTimeProvider
         cgDatabase = database
         cgResultEmitter = resultEmitter
+        cgErrorHandler = errorHandler
     End Sub
 
 
@@ -79,6 +87,9 @@ Public Class PingJob
 
         Catch ex As TaskCanceledException
             ' Suppress this.
+
+        Catch ex As Exception
+            cgErrorHandler.Handle($"Failed to record a ping: {ex.Message}")
         End Try
     End Function
 

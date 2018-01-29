@@ -5,6 +5,7 @@ Namespace Views
         Public Const Tabs As String = "TabsRegion"
         Public Const Flyouts As String = "FlyoutsRegion"
         Public Const WindowCommands As String = "WindowCommandsRegion"
+        Public Const [Error] As String = "ErrorRegion"
 
 
         Private Sub New()

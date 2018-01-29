@@ -216,6 +216,9 @@
     <Compile Include="Components\DataDirectoryProvider\DataDirectoryProvider.vb" />
     <Compile Include="Components\DataDirectoryProvider\DebugDataDirectoryProvider.vb" />
     <Compile Include="Components\DataDirectoryProvider\IDataDirectoryProvider.vb" />
+    <Compile Include="Components\ErrorHandler\ErrorHandler.vb" />
+    <Compile Include="Components\ErrorHandler\IErrorHandler.vb" />
+    <Compile Include="Components\ErrorHandler\IErrorSource.vb" />
     <Compile Include="Components\HistoryProvider\HistoryProvider.vb" />
     <Compile Include="Components\HistoryProvider\IHistoryProvider.vb" />
     <Compile Include="Components\LicenseProvider\ILicenseProvider.vb" />
@@ -258,6 +261,10 @@
     </Compile>
     <Compile Include="Components\LicenseProvider\OpenSourceLicense.vb" />
     <Compile Include="Views\Converters\DurationToStringConverter.vb" />
+    <Compile Include="Views\ErrorView\ErrorView.xaml.vb">
+      <DependentUpon>ErrorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ErrorView\ErrorViewModel.vb" />
     <Compile Include="Views\HistoryView\DayBoundsAnnotation.vb" />
     <Compile Include="Views\HistoryView\DurationAxisLabelAnnotation.vb" />
     <Compile Include="Views\HistoryView\HistoryView.xaml.vb">
@@ -293,6 +300,10 @@
     <Page Include="Views\AboutView\AboutWindowCommand.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ErrorView\ErrorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HistoryView\HistoryView.xaml">
       <SubType>Designer</SubType>

@@ -3,6 +3,14 @@ Public Class UrlOpener
     Implements IUrlOpener
 
 
+    Private ReadOnly cgErrorHandler As IErrorHandler
+
+
+    Public Sub New(errorHandler As IErrorHandler)
+        cgErrorHandler = errorHandler
+    End Sub
+
+
     Public Sub Open(url As String) _
         Implements IUrlOpener.Open
 
@@ -21,7 +29,7 @@ Public Class UrlOpener
             End Using
 
         Catch ex As Exception
-            Debug.WriteLine(ex)
+            cgErrorHandler.Handle($"Failed to open URL: {ex.Message}")
         End Try
     End Sub
 

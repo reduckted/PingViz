@@ -719,7 +719,10 @@ Namespace Views
 
                 Dim vm As HistoryViewModel
                 Dim resultSource As Mock(Of IPingResultSource)
+                Dim errorHandler As IErrorHandler
 
+
+                errorHandler = Mock.Of(Of IErrorHandler)
 
                 If results Is Nothing Then
                     results = Observable.Empty(Of PingResult)
@@ -759,7 +762,7 @@ Namespace Views
                 Scheduler = New TestScheduler
                 Scheduler.AdvanceTo(dateTimeProvider.GetDateTime().Ticks)
 
-                vm = New HistoryViewModel(Scheduler, historyProvider, dateTimeProvider, resultSource.Object)
+                vm = New HistoryViewModel(Scheduler, historyProvider, dateTimeProvider, resultSource.Object, errorHandler)
 
                 ' Update the plot, because that is what the 
                 ' WPF view would do when it is loaded. This

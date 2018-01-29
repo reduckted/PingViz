@@ -14,6 +14,7 @@ Namespace Views
 
         Private ReadOnly cgHistoryProvider As IHistoryProvider
         Private ReadOnly cgDateTimeProvider As IDateTimeProvider
+        Private ReadOnly cgErrorHandler As IErrorHandler
         Private cgStepSize As TimeSpan
         Private cgSelectedDate As Date
         Private cgUpdatingSelectedDate As Boolean
@@ -23,7 +24,8 @@ Namespace Views
                 scheduler As IScheduler,
                 historyProvider As IHistoryProvider,
                 dateTimeProvider As IDateTimeProvider,
-                resultsSource As IPingResultSource
+                resultsSource As IPingResultSource,
+                errorHandler As IErrorHandler
             )
 
             MyBase.New(scheduler)
@@ -43,8 +45,13 @@ Namespace Views
                 Throw New ArgumentNullException(NameOf(resultsSource))
             End If
 
+            If errorHandler Is Nothing Then
+                Throw New ArgumentNullException(NameOf(errorHandler))
+            End If
+
             cgHistoryProvider = historyProvider
             cgDateTimeProvider = dateTimeProvider
+            cgErrorHandler = errorHandler
 
             MoveBackCommand = ReactiveCommand.Create(AddressOf MoveBackAsync, outputScheduler:=scheduler)
             MoveForwardCommand = ReactiveCommand.Create(AddressOf MoveForwardAsync, outputScheduler:=scheduler)
@@ -176,6 +183,9 @@ Namespace Views
 
                 Plot.InvalidatePlot(True)
 
+            Catch ex As Exception
+                cgErrorHandler.Handle($"Failed to load pings: {ex.Message}")
+
             Finally
                 SetIsLoading(False)
             End Try
@@ -242,13 +252,7 @@ Namespace Views
             ' size, so we'll need to re-populate the whole chart instead.
             If result.Timestamp >= GetViewStartDateTime() Then
                 If result.Timestamp <= GetViewEndDateTime() Then
-                    Try
-                        Await PopulatePlotAsync()
-
-                    Catch ex As Exception
-                        ' TODO: Error handling?
-                        Debug.WriteLine(ex)
-                    End Try
+                    Await PopulatePlotAsync()
                 End If
             End If
         End Sub

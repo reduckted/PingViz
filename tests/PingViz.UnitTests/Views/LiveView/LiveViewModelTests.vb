@@ -1229,7 +1229,10 @@ Namespace Views
                 ) As LiveViewModel
 
                 Dim resultSource As Mock(Of IPingResultSource)
+                Dim errorHandler As IErrorHandler
 
+
+                errorHandler = Mock.Of(Of IErrorHandler)
 
                 If results Is Nothing Then
                     results = Observable.Empty(Of PingResult)
@@ -1269,7 +1272,7 @@ Namespace Views
                 Scheduler = New TestScheduler
                 Scheduler.AdvanceTo(dateTimeProvider.GetDateTime().Ticks)
 
-                Return New LiveViewModel(Scheduler, resultSource.Object, historyProvider, dateTimeProvider)
+                Return New LiveViewModel(Scheduler, resultSource.Object, historyProvider, dateTimeProvider, errorHandler)
             End Function
 
         End Class

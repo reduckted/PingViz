@@ -19,7 +19,7 @@ Namespace Views
         Private ReadOnly cgResultsSource As IPingResultSource
         Private ReadOnly cgHistoryProvider As IHistoryProvider
         Private ReadOnly cgDateTimeProvider As IDateTimeProvider
-        Private ReadOnly cgScheduler As IScheduler
+        Private ReadOnly cgErrorHandler As IErrorHandler
         Private ReadOnly cgCurrent As ObservableAsPropertyHelper(Of Integer?)
 
 
@@ -27,7 +27,8 @@ Namespace Views
                 scheduler As IScheduler,
                 resultsSource As IPingResultSource,
                 historyProvider As IHistoryProvider,
-                dateTimeProvider As IDateTimeProvider
+                dateTimeProvider As IDateTimeProvider,
+                errorHandler As IErrorHandler
             )
 
             MyBase.New(scheduler)
@@ -44,14 +45,14 @@ Namespace Views
                 Throw New ArgumentNullException(NameOf(dateTimeProvider))
             End If
 
-            If scheduler Is Nothing Then
-                Throw New ArgumentNullException(NameOf(scheduler))
+            If errorHandler Is Nothing Then
+                Throw New ArgumentNullException(NameOf(errorHandler))
             End If
 
             cgResultsSource = resultsSource
             cgHistoryProvider = historyProvider
             cgDateTimeProvider = dateTimeProvider
-            cgScheduler = scheduler
+            cgErrorHandler = errorHandler
 
             ConfigureTimeAxis()
 
@@ -80,21 +81,26 @@ Namespace Views
             latest = DateTimeAxis.ToDateTime(TimeAxis.Maximum).RoundDown(Application.PingInterval)
             earliest = latest.Subtract(Timeframe)
 
-            AddDataPoints(
-                Await cgHistoryProvider.GetPingsAsync(earliest, latest),
-                Application.PingInterval
-            )
+            Try
+                AddDataPoints(
+                    Await cgHistoryProvider.GetPingsAsync(earliest, latest),
+                    Application.PingInterval
+                )
+
+            Catch ex As Exception
+                cgErrorHandler.Handle($"Failed to load previous pings: {ex.Message}")
+            End Try
 
             ' Now that the graph has been loaded with the
             ' initial data, start watching for new results.
-            Use(cgResultsSource.Results.ObserveOn(cgScheduler).Subscribe(AddressOf AddPingResult))
+            Use(cgResultsSource.Results.ObserveOn(Scheduler).Subscribe(AddressOf AddPingResult))
 
             ' And we can now start scrolling the graph.
             Use(
                 Observable.Timer(
                     cgDateTimeProvider.GetDateTime().RoundDown(TimeSpan.FromSeconds(1)),
                     ScrollFrequency,
-                    cgScheduler
+                    Scheduler
                 ).Subscribe(Sub() UpdateGraphForCurrentTime())
             )
 

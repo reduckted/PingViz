@@ -14,6 +14,7 @@ Public Class PingJobTests
             Dim dateTimeProvider As IDateTimeProvider
             Dim database As IDatabase
             Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
 
 
             pinger = Nothing
@@ -21,9 +22,10 @@ Public Class PingJobTests
             dateTimeProvider = Mock.Of(Of IDateTimeProvider)
             database = Mock.Of(Of IDatabase)
             emitter = Mock.Of(Of IPingResultEmitter)
+            errorHandler = Mock.Of(Of IErrorHandler)
 
             Assert.Throws(Of ArgumentNullException)(
-                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter)
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
             )
         End Sub
 
@@ -35,6 +37,7 @@ Public Class PingJobTests
             Dim dateTimeProvider As IDateTimeProvider
             Dim database As IDatabase
             Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
 
 
             pinger = Mock.Of(Of IPinger)
@@ -42,9 +45,10 @@ Public Class PingJobTests
             dateTimeProvider = Mock.Of(Of IDateTimeProvider)
             database = Mock.Of(Of IDatabase)
             emitter = Mock.Of(Of IPingResultEmitter)
+            errorHandler = Mock.Of(Of IErrorHandler)
 
             Assert.Throws(Of ArgumentNullException)(
-                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter)
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
             )
         End Sub
 
@@ -56,6 +60,7 @@ Public Class PingJobTests
             Dim dateTimeProvider As IDateTimeProvider
             Dim database As IDatabase
             Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
 
 
             pinger = Mock.Of(Of IPinger)
@@ -63,9 +68,10 @@ Public Class PingJobTests
             dateTimeProvider = Nothing
             database = Mock.Of(Of IDatabase)
             emitter = Mock.Of(Of IPingResultEmitter)
+            errorHandler = Mock.Of(Of IErrorHandler)
 
             Assert.Throws(Of ArgumentNullException)(
-                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter)
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
             )
         End Sub
 
@@ -77,6 +83,7 @@ Public Class PingJobTests
             Dim dateTimeProvider As IDateTimeProvider
             Dim database As IDatabase
             Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
 
 
             pinger = Mock.Of(Of IPinger)
@@ -84,9 +91,10 @@ Public Class PingJobTests
             dateTimeProvider = Mock.Of(Of IDateTimeProvider)
             database = Nothing
             emitter = Mock.Of(Of IPingResultEmitter)
+            errorHandler = Mock.Of(Of IErrorHandler)
 
             Assert.Throws(Of ArgumentNullException)(
-                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter)
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
             )
         End Sub
 
@@ -98,6 +106,7 @@ Public Class PingJobTests
             Dim dateTimeProvider As IDateTimeProvider
             Dim database As IDatabase
             Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
 
 
             pinger = Mock.Of(Of IPinger)
@@ -105,9 +114,33 @@ Public Class PingJobTests
             dateTimeProvider = Mock.Of(Of IDateTimeProvider)
             database = Mock.Of(Of IDatabase)
             emitter = Nothing
+            errorHandler = Mock.Of(Of IErrorHandler)
 
             Assert.Throws(Of ArgumentNullException)(
-                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter)
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
+            )
+        End Sub
+
+
+        <Fact()>
+        Public Sub RejectsNullErrorHandler()
+            Dim pinger As IPinger
+            Dim settingsManager As ISettingsManager
+            Dim dateTimeProvider As IDateTimeProvider
+            Dim database As IDatabase
+            Dim emitter As IPingResultEmitter
+            Dim errorHandler As IErrorHandler
+
+
+            pinger = Mock.Of(Of IPinger)
+            settingsManager = Mock.Of(Of ISettingsManager)
+            dateTimeProvider = Mock.Of(Of IDateTimeProvider)
+            database = Mock.Of(Of IDatabase)
+            emitter = Mock.Of(Of IPingResultEmitter)
+            errorHandler = Nothing
+
+            Assert.Throws(Of ArgumentNullException)(
+                Function() New PingJob(pinger, settingsManager, dateTimeProvider, database, emitter, errorHandler)
             )
         End Sub
 
@@ -145,8 +178,9 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(time:=time),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
-                )
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
+)
 
                 Await job.Execute(context)
             End Using
@@ -181,7 +215,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(time:=#2017-02-03 12:34:00#.AddMilliseconds(123)),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -208,7 +243,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -235,7 +271,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -265,7 +302,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(address:="foo.bar"),
                     CreateMockDateTimeProvider(),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -295,7 +333,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -329,7 +368,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(),
                     database,
-                    Mock.Of(Of IPingResultEmitter)
+                    Mock.Of(Of IPingResultEmitter),
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -360,7 +400,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(time:=time),
                     database,
-                    emitter.Object
+                    emitter.Object,
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -394,7 +435,8 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(time:=time),
                     database,
-                    emitter.Object
+                    emitter.Object,
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
@@ -429,12 +471,46 @@ Public Class PingJobTests
                     CreateMockSettingsManager(),
                     CreateMockDateTimeProvider(),
                     database,
-                    emitter.Object
+                    emitter.Object,
+                    Mock.Of(Of IErrorHandler)
                 )
 
                 Await job.Execute(context)
 
                 emitter.Verify(Sub(x) x.Emit(It.IsAny(Of PingResult)), Times.Never)
+            End Using
+        End Function
+
+
+        <Fact()>
+        Public Async Function LogsErrors() As Task
+            Using database = New MockDatabase(cgDatabaseOptions)
+                Dim job As PingJob
+                Dim context As IJobExecutionContext
+                Dim pinger As Mock(Of IPinger)
+                Dim handler As Mock(Of IErrorHandler)
+
+
+                handler = New Mock(Of IErrorHandler)
+                pinger = New Mock(Of IPinger)
+                context = Mock.Of(Of IJobExecutionContext)
+
+                pinger _
+                    .Setup(Function(x) x.PingAsync(It.IsAny(Of String), It.IsAny(Of TimeSpan), It.IsAny(Of CancellationToken))) _
+                    .ThrowsAsync(New InvalidOperationException)
+
+                job = New PingJob(
+                    pinger.Object,
+                    CreateMockSettingsManager(),
+                    CreateMockDateTimeProvider(),
+                    database,
+                    Mock.Of(Of IPingResultEmitter),
+                    handler.Object
+                )
+
+                Await job.Execute(context)
+
+                handler.Verify(Sub(x) x.Handle(It.IsAny(Of String)), Times.Once)
             End Using
         End Function
 
