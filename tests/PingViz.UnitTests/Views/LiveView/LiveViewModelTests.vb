@@ -37,11 +37,41 @@ Namespace Views
 
 
             <Fact()>
-            Public Sub IsInitiallyNull()
-                Using vm = CreateViewModel()
+            Public Async Function IsInitiallySetToLatestDurationWhenLatestIsWithinIntervalOfNow() As Task
+                Dim history As IEnumerable(Of PingResult)
+                Dim now As Date
+
+
+                now = #2001-05-06 8:00:40#
+
+                history = {
+                    New PingResult With {.Timestamp = #2001-05-06 8:00:30#, .Duration = TimeSpan.FromMilliseconds(444)}
+                }
+
+                Using vm = CreateViewModel(history:=history, dateTime:=now)
+                    Await vm.OnLoadedAsync()
+                    Assert.Equal(444, vm.Current)
+                End Using
+            End Function
+
+
+            <Fact()>
+            Public Async Function IsInitiallySetToNullWhenLatestResultIsMoreThanAnIntervalFromNow() As Task
+                Dim history As IEnumerable(Of PingResult)
+                Dim now As Date
+
+
+                now = #2001-05-06 8:00:40#
+
+                history = {
+                    New PingResult With {.Timestamp = #2001-05-06 8:00:29#, .Duration = TimeSpan.FromMilliseconds(444)}
+                }
+
+                Using vm = CreateViewModel(history:=history, dateTime:=now)
+                    Await vm.OnLoadedAsync()
                     Assert.Null(vm.Current)
                 End Using
-            End Sub
+            End Function
 
 
             <Fact()>

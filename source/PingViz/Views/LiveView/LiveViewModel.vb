@@ -4,6 +4,7 @@ Imports OxyPlot.Series
 Imports ReactiveUI
 Imports System.Reactive.Concurrency
 Imports System.Reactive.Linq
+Imports System.Reactive.Subjects
 
 
 Namespace Views
@@ -21,6 +22,7 @@ Namespace Views
         Private ReadOnly cgDateTimeProvider As IDateTimeProvider
         Private ReadOnly cgErrorHandler As IErrorHandler
         Private ReadOnly cgCurrent As ObservableAsPropertyHelper(Of Integer?)
+        Private ReadOnly cgInitialCurrentValue As Subject(Of Integer?)
 
 
         Public Sub New(
@@ -56,10 +58,12 @@ Namespace Views
 
             ConfigureTimeAxis()
 
-            cgCurrent = resultsSource _
-                .Results _
-                .Select(Function(x) x.Duration.ToMilliseconds()) _
-                .ToProperty(Me, NameOf(Current))
+            cgInitialCurrentValue = New Subject(Of Integer?)
+
+            cgCurrent = Observable.Merge(
+                cgInitialCurrentValue,
+                resultsSource.Results.Select(Function(x) x.Duration.ToMilliseconds())
+            ).ToProperty(Me, NameOf(Current))
 
             Use(cgCurrent)
         End Sub
@@ -82,10 +86,23 @@ Namespace Views
             earliest = latest.Subtract(Timeframe)
 
             Try
-                AddDataPoints(
-                    Await cgHistoryProvider.GetPingsAsync(earliest, latest),
-                    Application.PingInterval
-                )
+                Dim points As List(Of PingResult)
+
+
+                points = (Await cgHistoryProvider.GetPingsAsync(earliest, latest)).ToList()
+
+                AddDataPoints(points, Application.PingInterval)
+
+                If points.Count > 0 Then
+                    Dim last As PingResult
+
+
+                    last = points(points.Count - 1)
+
+                    If last.Timestamp >= latest.Subtract(Application.PingInterval) Then
+                        cgInitialCurrentValue.OnNext(last.Duration.ToMilliseconds())
+                    End If
+                End If
 
             Catch ex As Exception
                 cgErrorHandler.Handle($"Failed to load previous pings: {ex.Message}")
