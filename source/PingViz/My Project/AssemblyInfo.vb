@@ -12,10 +12,10 @@ Imports System.Windows
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("PingViz")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyDescription("Record and view pings.")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("PingViz")>
-<Assembly: AssemblyCopyright("Copyright ©  2017")>
+<Assembly: AssemblyCopyright("Copyright © 2018")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 
