@@ -2,6 +2,7 @@ Imports Autofac
 Imports Hardcodet.Wpf.TaskbarNotification
 Imports PingViz.Views
 
+
 Class Application
 
     Public Shared ReadOnly PingInterval As TimeSpan = TimeSpan.FromSeconds(10)

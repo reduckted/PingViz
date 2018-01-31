@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PingViz", "source\PingViz\PingViz.vbproj", "{F2A80BE9-EA84-467F-889C-E4DED92BE0A2}"
 EndProject
@@ -10,6 +10,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FD33C5BC-8014-459B-A72B-B977A768269F}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PingViz.UnitTests", "tests\PingViz.UnitTests\PingViz.UnitTests.vbproj", "{795AF8FA-4809-48DE-ABCA-236B612D0FFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{06FCE3DE-AB6D-4C13-9142-1641CBADC294}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.ps1 = build\build.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
