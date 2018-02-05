@@ -72,7 +72,7 @@ Namespace Views
 
         Public ReadOnly Property Version As String
             Get
-                Return My.Application.Info.Version.ToString()
+                Return My.Application.Info.Version.ToString(3)
             End Get
         End Property
 
